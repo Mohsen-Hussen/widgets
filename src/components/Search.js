@@ -22,12 +22,21 @@ const Search = () => {
             });
             setResults(data.query.search);
         };
-        const timeoutId = setTimeout(() => {
-            if (term) {
-                searchWiki();
-            }
-        }, 1000);
-        // searchWiki();
+
+        // to treat api request delay for 1 sec
+        if (term && !results.length) {
+            searchWiki();
+        } else {
+            // to treat requesting api untill finishing my search typing
+            const timeoutId = setTimeout(() => {
+                if (term) {
+                    searchWiki();
+                }
+            }, 1000);
+            return () => {
+                clearTimeout(timeoutId);
+            };
+        }
     },[term]);
 
     const renderdResultsList = results.map((result) => {
