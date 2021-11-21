@@ -3,11 +3,21 @@ import axios from 'axios';
 
 const Search = () => {
     const [term , setTerm] = useState('Html');
+    const [debouncedterm , setDebouncedTerm] = useState(term);
     const [results , setResults] = useState([]);
 
     const onSearchTermHandler = (e) => {
         setTerm(e.target.value);
     }
+    // made 2 seperate use effect to treat the warning at the console & to not make double api request
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setDebouncedTerm(term);
+        }, 1000);
+        return () => {
+            clearTimeout(timerId);
+        };
+    },[term]);
 
     useEffect(() => {
         const searchWiki = async () => {
@@ -17,27 +27,13 @@ const Search = () => {
                     list: 'search',
                     origin: '*',
                     format: 'json',
-                    srsearch: term,
+                    srsearch: debouncedterm,
                 },
             });
             setResults(data.query.search);
         };
-
-        // to treat api request delay for 1 sec
-        if (term && !results.length) {
-            searchWiki();
-        } else {
-            // to treat requesting api untill finishing my search typing
-            const timeoutId = setTimeout(() => {
-                if (term) {
-                    searchWiki();
-                }
-            }, 1000);
-            return () => {
-                clearTimeout(timeoutId);
-            };
-        }
-    },[term]);
+        searchWiki();
+    },[debouncedterm]);
 
     const renderdResultsList = results.map((result) => {
         return(
