@@ -13,29 +13,29 @@ const Dropdown = ({options , selected , onSelectChange}) => {
             </div>
         );
     });
-    useEffect(() => {
-        document.body.addEventListener("click",(e) => {
-            if (ref.current.contains(e.target)) {
-                return;
-            }
-            setOpen(false);},
-            { capture: true }
-        );
-    }, []);
     // useEffect(() => {
-    //     const onBodyClick = (event) => {
-    //         if (ref.current.contains(event.target)) {
+    //     document.body.addEventListener("click",(e) => {
+    //         if (ref.current.contains(e.target)) {
     //             return;
     //         }
-    //         setOpen(false);
-    //     };
-    //     document.body.addEventListener("click", onBodyClick, { capture: true });
-    //     return () => {
-    //         document.body.removeEventListener("click", onBodyClick, {
-    //             capture: true,
-    //         });
-    //     };
+    //         setOpen(false);},
+    //         { capture: true }
+    //     );
     // }, []);
+    useEffect(() => {
+        const onBodyClick = (event) => {
+            if (ref.current.contains(event.target)) {
+                return;
+            }
+            setOpen(false);
+        };
+        document.body.addEventListener("click", onBodyClick, { capture: true });
+        return () => {
+            document.body.removeEventListener("click", onBodyClick, {
+                capture: true,
+            });
+        };
+    }, []);
     return (
         <div ref={ref} className="ui form">
             <div className="field">
