@@ -13,15 +13,15 @@ const Dropdown = ({options , selected , onSelectChange}) => {
             </div>
         );
     });
-    // useEffect(() => {
-    //     document.body.addEventListener("click",(e) => {
-    //         if (ref.current.contains(e.target)) {
-    //             return;
-    //         }
-    //         setOpen(false);},
-    //         { capture: true }
-    //     );
-    // }, []);
+    const renderedText = options.map((option) => {
+        if (option.value === selected.value) {
+            return (
+                <p key={option.value} style={{color:`${option.value}`}} onClick={() => {onSelectChange(option)}}>
+                    This is {option.value}
+                </p>
+            );
+        } else {return null;}
+    });
     useEffect(() => {
         const onBodyClick = (event) => {
             if (ref.current.contains(event.target)) {
@@ -49,6 +49,7 @@ const Dropdown = ({options , selected , onSelectChange}) => {
                         {renderedOptions}
                     </div>
                 </div>
+                <div>{renderedText}</div>
             </div>
         </div>
     )
